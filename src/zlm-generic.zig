@@ -77,7 +77,7 @@ pub fn SpecializeOn(comptime Real: type) type {
                 pub fn neg(self: Self) Self {
                     var result: Self = undefined;
                     inline for (@typeInfo(Self).@"struct".fields) |fld| {
-                        @field(result, fld.name) = - @field(self, fld.name);
+                        @field(result, fld.name) = -@field(self, fld.name);
                     }
                     return result;
                 }
@@ -194,7 +194,7 @@ pub fn SpecializeOn(comptime Real: type) type {
                 }
 
                 /// returns a new vector where each component is clamped to the given range.
-                /// `min` and `max` must be of the same type as the vector, and every field of 
+                /// `min` and `max` must be of the same type as the vector, and every field of
                 /// `min` must be smaller or equal to the corresponding field of `max`.
                 pub fn componentClamp(a: Self, min: Self, max: Self) Self {
                     var result: Self = undefined;
@@ -248,7 +248,7 @@ pub fn SpecializeOn(comptime Real: type) type {
             pub const unitX = Self.new(1, 0);
             pub const unitY = Self.new(0, 1);
 
-            pub usingnamespace VectorMixin(Self);
+            pub const op = VectorMixin(Self);
 
             pub fn new(x: Real, y: Real) Self {
                 return Self{
@@ -312,7 +312,7 @@ pub fn SpecializeOn(comptime Real: type) type {
             pub const unitY = Self.new(0, 1, 0);
             pub const unitZ = Self.new(0, 0, 1);
 
-            pub usingnamespace VectorMixin(Self);
+            pub const op = VectorMixin(Self);
 
             pub fn new(x: Real, y: Real, z: Real) Self {
                 return Self{
@@ -419,7 +419,7 @@ pub fn SpecializeOn(comptime Real: type) type {
             pub const unitZ = Self.new(0, 0, 1, 0);
             pub const unitW = Self.new(0, 0, 0, 1);
 
-            pub usingnamespace VectorMixin(Self);
+            pub const op = VectorMixin(Self);
 
             pub fn new(x: Real, y: Real, z: Real, w: Real) Self {
                 return Self{
@@ -566,11 +566,11 @@ pub fn SpecializeOn(comptime Real: type) type {
                 result.fields[0][1] = u.x;
                 result.fields[1][1] = u.y;
                 result.fields[2][1] = u.z;
-                result.fields[0][2] = - f.x;
-                result.fields[1][2] = - f.y;
-                result.fields[2][2] = - f.z;
-                result.fields[3][0] = - Vec3.dot(s, eye);
-                result.fields[3][1] = - Vec3.dot(u, eye);
+                result.fields[0][2] = -f.x;
+                result.fields[1][2] = -f.y;
+                result.fields[2][2] = -f.z;
+                result.fields[3][0] = -Vec3.dot(s, eye);
+                result.fields[3][1] = -Vec3.dot(u, eye);
                 result.fields[3][2] = Vec3.dot(f, eye);
                 return result;
             }
@@ -598,9 +598,9 @@ pub fn SpecializeOn(comptime Real: type) type {
                 var result = Self.zero;
                 result.fields[0][0] = 1.0 / (aspect * tanHalfFovy);
                 result.fields[1][1] = 1.0 / (tanHalfFovy);
-                result.fields[2][2] = - (far + near) / (far - near);
-                result.fields[2][3] = - 1;
-                result.fields[3][2] = - (2 * far * near) / (far - near);
+                result.fields[2][2] = -(far + near) / (far - near);
+                result.fields[2][3] = -1;
+                result.fields[3][2] = -(2 * far * near) / (far - near);
                 return result;
             }
 
@@ -614,12 +614,12 @@ pub fn SpecializeOn(comptime Real: type) type {
                 const y = normalized.y;
                 const z = normalized.z;
 
-                return Self{    
+                return Self{
                     .fields = [4][4]Real{
-                        [4]Real{ cos + x * x * (1 - cos),       x * y * (1 - cos) + z * sin,    x * z * (1 - cos) - y * sin, 0 },
-                        [4]Real{ y * x * (1 - cos) - z * sin,   cos + y * y * (1 - cos),        y * z * (1 - cos) + x * sin, 0 },
-                        [4]Real{ z * x * (1 - cos) + y * sin,   z * y * (1 - cos) - x * sin,    cos + z * z * (1 - cos),     0 },
-                        [4]Real{ 0,                             0,                              0,                           1 },
+                        [4]Real{ cos + x * x * (1 - cos), x * y * (1 - cos) + z * sin, x * z * (1 - cos) - y * sin, 0 },
+                        [4]Real{ y * x * (1 - cos) - z * sin, cos + y * y * (1 - cos), y * z * (1 - cos) + x * sin, 0 },
+                        [4]Real{ z * x * (1 - cos) + y * sin, z * y * (1 - cos) - x * sin, cos + z * z * (1 - cos), 0 },
+                        [4]Real{ 0, 0, 0, 1 },
                     },
                 };
             }
@@ -672,10 +672,10 @@ pub fn SpecializeOn(comptime Real: type) type {
                 var result = Self.identity;
                 result.fields[0][0] = 2 / (right - left);
                 result.fields[1][1] = 2 / (top - bottom);
-                result.fields[2][2] = - 2 / (far - near);
-                result.fields[3][0] = - (right + left) / (right - left);
-                result.fields[3][1] = - (top + bottom) / (top - bottom);
-                result.fields[3][2] = - (far + near) / (far - near);
+                result.fields[2][2] = -2 / (far - near);
+                result.fields[3][0] = -(right + left) / (right - left);
+                result.fields[3][1] = -(top + bottom) / (top - bottom);
+                result.fields[3][2] = -(far + near) / (far - near);
                 return result;
             }
 

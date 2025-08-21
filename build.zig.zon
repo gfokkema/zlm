@@ -1,7 +1,7 @@
 .{
-    .name = "zlm",
+    .name = .zlm,
     .version = "0.1.0",
-    .minimum_zig_version = "0.11.0",
+    .minimum_zig_version = "0.14.0",
     .dependencies = .{},
     .paths = .{
         ".github",
@@ -13,4 +13,5 @@
         "src",
         "zig.mod",
     },
+    .fingerprint = 0x5c6c0dda69181419,
 }

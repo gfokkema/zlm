@@ -11,6 +11,3 @@ pub fn toRadians(deg: anytype) @TypeOf(deg) {
 pub fn toDegrees(rad: anytype) @TypeOf(rad) {
     return 180.0 * rad / std.math.pi;
 }
-
-// export all vectors by-default to f32
-pub usingnamespace SpecializeOn(f32);
